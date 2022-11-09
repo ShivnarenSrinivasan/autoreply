@@ -1,4 +1,5 @@
 from pathlib import Path
 
-ROOT = Path('.').parent.resolve()
+ROOT = Path(__file__).parent.parent.resolve()
+assert ROOT.exists()
 DATA = ROOT.joinpath('data')

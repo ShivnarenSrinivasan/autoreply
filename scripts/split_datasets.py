@@ -1,8 +1,13 @@
 """Split and save source dataset."""
+from __future__ import annotations
 import argparse
 import logging
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any, NamedTuple
+
+import numpy as np
 import pandas as pd
 from sklearn import (
     model_selection,
@@ -10,6 +15,7 @@ from sklearn import (
 
 from autoreply import (
     dataset,
+    misc_data,
 )
 
 _SEED = 42
@@ -23,6 +29,10 @@ def main(root: Path) -> None:
         logging.debug(ds)
         _split = split(_load_raw(_raw_file_path(ds, data)))
         save_data(data, _split, ds)
+
+    misc = misc_data.load()
+    dbs = split_misc(misc)
+    save_misc(data, dbs)
 
 
 @dataclass(repr=False, frozen=True, kw_only=True, slots=True)
@@ -52,6 +62,13 @@ def save_data(root: Path, data: Data, ds: dataset.Dataset) -> None:
         dir_.mkdir(exist_ok=True)
         file = dir_.joinpath(dataset.filename(ds))
         data[type_].to_csv(file, index=False)
+
+
+def save_misc(root: Path, dbs: SplitMisc) -> None:
+    for type_ in dataset.Type:
+        dir_ = root.joinpath(type_.value)
+        dir_.mkdir(exist_ok=True)
+        dbs[type_].to_csv(dir_)
 
 
 def _load_raw(file: Path) -> pd.DataFrame:
@@ -85,6 +102,76 @@ def split(df: pd.DataFrame, dev_frac: float = 0.1, test_frac: float = 0.2) -> Da
         _log_frame_size(_df, type_)
 
     return Data(train=X_train, dev=X_dev, test=X_test)
+
+
+SplitMisc = Mapping[dataset.Type, misc_data.DBResult]
+
+
+def split_misc(raw: misc_data.MiscSchema) -> SplitMisc:
+    data = raw['data']
+    db = misc_data.arrays(data)
+    summary = misc_data.Summary(
+        misc_data.summary(data).join(db.title.set_index('title'))
+    )
+
+    title_ids = _gen_indices(summary)
+
+    def create_db(df: pd.DataFrame, type_: dataset.Type) -> misc_data.DBResult:
+        return misc_data.arrays(
+            [d for d in data if d['title'] in set(title_ids[type_].index)]
+        )
+
+    return {type_: create_db(title_ids[type_], type_) for type_ in dataset.Type}
+
+
+class _Indices(NamedTuple):
+    train: pd.Series[int]
+    dev: pd.Series[int]
+    test: pd.Series[int]
+
+    def __getitem__(self, key: dataset.Type) -> pd.DataFrame:
+        return getattr(self, key.value)
+
+
+def _gen_indices(summary: misc_data.Summary) -> _Indices:
+    n = len(summary)
+    indexer = np.arange(n)
+
+    c1 = indexer % 9 == 0
+    c2 = indexer % 3 == 0
+
+    dev_mask = c1
+    test_mask = c2 & ~c1
+    train_mask = ~c2
+
+    def _subset(mask: np.ndarray[bool, Any]) -> pd.Series[int]:
+        return summary.iloc[mask]['title_id']
+
+    train = _subset(train_mask)
+    dev = _subset(dev_mask)
+    test = _subset(test_mask)
+
+    def _log():
+        n_train = len(train)
+        n_dev = len(dev)
+        n_test = len(test)
+        tot = n_dev + n_test + n_train
+
+        def pct(x: int) -> str:
+            return f'{x/tot:.2%}'
+
+        msg = [
+            f'{n_train = } ({pct(n_train)})',
+            f'{n_dev = } ({pct(n_dev)})',
+            f'{n_test = } ({pct(n_test)})',
+        ]
+        print('\n'.join(msg))
+
+    _log()
+
+    return _Indices(
+        *(summary.iloc[mask]['title_id'] for mask in (train_mask, dev_mask, test_mask))
+    )
 
 
 def _log_frame_size(df: pd.DataFrame, type_: str) -> None:
