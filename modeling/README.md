@@ -1,10 +1,4 @@
-## Autoreply
-### Information retrieval and Question/Answer matching
----------
-
-
 ## Abstract
-------------
 
 The vast majority of all digital "search" that the average person performs is 
 exact matching.
@@ -17,7 +11,6 @@ concept and semantic search, especially on small sized corpora.
 
 
 ## Objective
-------------
 
 This project aims to implement a framework which could then be deployed on 
 arbitrary documents/FAQ's with minimal overhead.
@@ -33,7 +26,7 @@ is selection of the wrong section/answer.
 
 
 ## Methodologies
-----------------
+
 There are at present two main forms in which textual knowledge is stored:
 - Structured Question/Answer pairs (FAQ's)
 - "Unstructured" documents (which have some structure in the form of headings/sections)
@@ -43,14 +36,12 @@ selected based on dataset size and whether the data is structured/unstructured.
 
 
 ## Possible Outcomes
---------------------
 
 - Improve usability/accessibility of documentation/knowledge articles to non-experts
 - Reduce the manual effort involved in creating and maintaining general FAQ's
 
 
 ## Applicability in the Real World
---------------------------------
 
 This framework would be of great relevance within organizations with an internal 
 knowledge base which is currently indexed and curated by hand.
