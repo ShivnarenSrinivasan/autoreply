@@ -11,6 +11,8 @@ concept and semantic search, especially on small sized corpora.
 
 
 ## Objective
+When a question is posed, find the most relevant document, and if possible, 
+extract the relevant section.
 
 This project aims to implement a framework which could then be deployed on 
 arbitrary documents/FAQ's with minimal overhead.
