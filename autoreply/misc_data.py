@@ -91,7 +91,7 @@ class DBResult:
         return [field.name for field in dataclasses.fields(cls)]
 
     @classmethod
-    def load(cls: type[_T], data: Path, type_: dataset.Type = dataset.Type.TRAIN) -> _T:
+    def load(cls: type[_T], data: Path = C.DATA, type_: dataset.Type = dataset.Type.TRAIN) -> _T:
         path = data.joinpath(type_.value)
         return cls(
             **{file: pd.read_csv(path.joinpath(f'{file}.csv')) for file in cls.keys()}
@@ -100,7 +100,7 @@ class DBResult:
     def to_csv(self, path: Path) -> None:
         frames = dataclasses.asdict(self)
         for name, frame in frames.items():
-            frame.to_csv(path.joinpath(f'{name}.csv'))
+            frame.to_csv(path.joinpath(f'{name}.csv'), index=False)
 
 
 def arrays(data: Data) -> DBResult:
