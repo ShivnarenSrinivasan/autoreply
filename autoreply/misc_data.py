@@ -79,7 +79,7 @@ def summary(data: Data) -> Summary:
 _T = TypeVar('_T', bound='DBResult')
 
 
-@dataclass(repr=False, frozen=True, kw_only=True, slots=True)
+@dataclass(repr=False, frozen=True)
 class DBResult:
     title: pd.DataFrame
     paragraph: pd.DataFrame
