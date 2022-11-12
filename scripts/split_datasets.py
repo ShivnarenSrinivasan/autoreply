@@ -160,9 +160,9 @@ def _gen_indices(summary: misc_data.Summary) -> _Indices:
             return f'{x/tot:.2%}'
 
         msg = [
-            f'{n_train = } ({pct(n_train)})',
-            f'{n_dev = } ({pct(n_dev)})',
-            f'{n_test = } ({pct(n_test)})',
+            f'n_train = {n_train} ({pct(n_train)})',
+            f'n_dev = {n_dev} ({pct(n_dev)})',
+            f'n_test = {n_test} ({pct(n_test)})',
         ]
         print('\n'.join(msg))
 
