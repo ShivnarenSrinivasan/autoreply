@@ -34,7 +34,7 @@ def main(root: Path) -> None:
     save_misc(data, dbs)
 
 
-@dataclass(repr=False, frozen=True, kw_only=True, slots=True)
+@dataclass(repr=False, frozen=True)
 class Data:
     train: pd.DataFrame
     dev: pd.DataFrame
