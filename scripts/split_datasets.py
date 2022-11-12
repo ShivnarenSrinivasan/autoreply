@@ -2,10 +2,9 @@
 from __future__ import annotations
 import argparse
 import logging
-from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, NamedTuple
+from typing import Any, NamedTuple, Mapping
 
 import numpy as np
 import pandas as pd

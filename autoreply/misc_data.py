@@ -9,8 +9,10 @@ from typing import (
     TypeVar,
     TypedDict,
     NewType,
+    Sequence,
+    Iterable,
 )
-from collections.abc import Sequence, Iterable
+from typing_extensions import TypedDict
 
 import pandas as pd
 
