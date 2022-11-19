@@ -106,18 +106,17 @@ def split(df: pd.DataFrame, dev_frac: float = 0.1, test_frac: float = 0.2) -> Da
 SplitMisc = Mapping[dataset.Type, misc_data.DBResult]
 
 
-def split_misc(raw: misc_data.MiscSchema) -> SplitMisc:
-    data = raw['data']
-    db = misc_data.arrays(data)
+def split_misc(raw: misc_data.Data) -> SplitMisc:
+    db = misc_data.arrays(raw)
     summary = misc_data.Summary(
-        misc_data.summary(data).join(db.title.set_index('title'))
+        misc_data.summary(raw).join(db.title.set_index('title'))
     )
 
     title_ids = _gen_indices(summary)
 
     def create_db(df: pd.DataFrame, type_: dataset.Type) -> misc_data.DBResult:
         return misc_data.arrays(
-            [d for d in data if d['title'] in set(title_ids[type_].index)]
+            [d for d in raw if d['title'] in set(title_ids[type_].index)]
         )
 
     return {type_: create_db(title_ids[type_], type_) for type_ in dataset.Type}

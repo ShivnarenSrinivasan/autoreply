@@ -22,10 +22,6 @@ from . import (
 )
 
 
-class MiscSchema(TypedDict):
-    data: Sequence[Datum]
-
-
 class Datum(TypedDict):
     title: str
     paragraphs: Sequence[Paragraph]
@@ -51,12 +47,14 @@ class Answer(TypedDict):
     answer_start: int
 
 
-def load(root: Path = C.DATA) -> MiscSchema:
+def load(root: Path = C.DATA) -> Data:
     file = root.joinpath('raw', 'train_data.txt')
 
     with open(file) as fp:
         json_ = json.load(fp)
-    return MiscSchema(**json_)
+
+    data: Data = json_['data']
+    return data
 
 
 Summary = NewType('Summary', pd.DataFrame)
