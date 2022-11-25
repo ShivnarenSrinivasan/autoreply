@@ -89,7 +89,9 @@ class DBResult:
         return [field.name for field in dataclasses.fields(cls)]
 
     @classmethod
-    def load(cls: type[_T], data: Path = C.DATA, type_: dataset.Type = dataset.Type.TRAIN) -> _T:
+    def load(
+        cls: type[_T], data: Path = C.DATA, type_: dataset.Type = dataset.Type.TRAIN
+    ) -> _T:
         path = data.joinpath(type_.value)
         return cls(
             **{file: pd.read_csv(path.joinpath(f'{file}.csv')) for file in cls.keys()}
