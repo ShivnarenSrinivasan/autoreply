@@ -7,6 +7,7 @@ from collections.abc import (
 
 from typing import (
     NamedTuple,
+    Tuple,
 )
 import more_itertools as mit
 from gensim.models.doc2vec import Doc2Vec
@@ -28,7 +29,7 @@ class Key(NamedTuple):
 # c = Counter(_a.tag[0] for _a in a)
 # c.most_common(2)
 
-Tag = tuple[int, int]
+Tag = Tuple[int, int]
 
 
 class Score(NamedTuple):
