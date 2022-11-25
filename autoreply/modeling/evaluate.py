@@ -1,14 +1,12 @@
 import multiprocessing as mp
-from collections.abc import (
-    Collection,
-    Iterable,
-    Sequence,
-)
 
 from typing import (
     NamedTuple,
     Tuple,
     List,
+    Collection,
+    Iterable,
+    Sequence,
 )
 import more_itertools as mit
 from gensim.models.doc2vec import Doc2Vec
