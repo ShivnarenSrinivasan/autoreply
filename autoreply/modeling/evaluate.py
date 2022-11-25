@@ -8,6 +8,7 @@ from collections.abc import (
 from typing import (
     NamedTuple,
     Tuple,
+    List,
 )
 import more_itertools as mit
 from gensim.models.doc2vec import Doc2Vec
@@ -37,7 +38,7 @@ class Score(NamedTuple):
     similarity: float
 
 
-def infer(txt: str, doc_model: Doc2Vec, epochs: int) -> list[Score]:
+def infer(txt: str, doc_model: Doc2Vec, epochs: int) -> List[Score]:
     tokens = preprocess.main(txt)
     vec = doc_model.infer_vector(tokens, epochs=epochs)
     return [Score(*vec) for vec in doc_model.dv.most_similar(vec, topn=5)]
