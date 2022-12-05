@@ -14,7 +14,8 @@ _STOPWORDS = gensim.parsing.preprocessing.STOPWORDS | set(
 
 
 def main(txt: str) -> Sequence[str]:
-    rem_short = ft.partial(gensim.parsing.preprocessing.remove_short_tokens, minsize=2)
+    # could be useful 2 length tokens (`us`, `M1`)
+    rem_short = ft.partial(gensim.parsing.preprocessing.remove_short_tokens, minsize=1)
     rem_stop = ft.partial(
         gensim.parsing.preprocessing.remove_stopword_tokens, stopwords=_STOPWORDS
     )
